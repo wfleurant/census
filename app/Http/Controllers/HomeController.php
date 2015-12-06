@@ -16,8 +16,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $m = new Mapper;
-        return view('welcome');
+        $m = Mapper::map(42.322639, -71.072849, [
+            'zoom' => 17,
+            'center' => true,
+            'marker' => true,
+            'type' => 'ROADMAP',
+        ]);
+        return $m->render();
     }
 
     /**
