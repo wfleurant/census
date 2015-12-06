@@ -1,0 +1,44 @@
+#####################
+#   __  __ _  _ _   #
+#  |  \/ _| \| | |  #
+#  | o )_ \ \\ | |  #
+#  |__/|__/_|\_|_|  #
+#                   #
+#####################
+
+nginx:
+  build: images/nginx
+  command: nginx -g "daemon off;"
+  links:
+    - php
+  volumes:
+    - $PWD:/app
+  ports:
+    - "8000:80"
+
+mysql:
+  image: percona:5.6
+  volumes:
+    - /dev/shm/dsni_mysql:/var/lib/mysql
+  ports:
+    - "172.17.0.1:3306:3306"
+  environment:
+      MYSQL_ROOT_PASSWORD: cLBoT8e0bzjzhIkdcbzJ
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: dsni
+      MYSQL_USERNAME: dsni
+      MYSQL_PASSWORD: xt03PdYzcquYs86acy0J
+
+php:
+  build: images/php
+  volumes:
+    - $PWD:/app
+    - $PWD/images/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - $HOME/.ssh/id_ed25519:/root/.ssh/id_ed25519
+    - $HOME/.ssh/id_ed25519.pub:/root/.ssh/id_ed25519.pub
+    - $HOME/.composer/auth.json:/root/.composer/auth.json
+    - $HOME/.ssh/id_rsa:/root/.ssh/id_rsa
+    - $HOME/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
+  working_dir: /app/public
+  ports:
+    - "9000:9000"
