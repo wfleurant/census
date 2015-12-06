@@ -42,3 +42,5 @@ php:
   working_dir: /app/public
   ports:
     - "9000:9000"
+  links:
+    - mysql
