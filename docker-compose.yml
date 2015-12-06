@@ -19,7 +19,7 @@ nginx:
 mysql:
   image: percona:5.6
   volumes:
-    - /dev/shm/dsni_mysql:/var/lib/mysql
+    - $PWD/images/mysql_data:/var/lib/mysql
   ports:
     - "172.17.0.1:3306:3306"
   environment:
@@ -42,5 +42,7 @@ php:
   working_dir: /app/public
   ports:
     - "9000:9000"
+  environment:
+      CENSUS_APIKEY: Example-U6ufn1MMMFWPqMqMnOnRnaZcJ41aaqIM
   links:
     - mysql

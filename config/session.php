@@ -5,7 +5,7 @@ return [
     /*
     | "file", "cookie", "database", "apc", "memcached", "redis", "array"
     */
-    'driver' => env('database'),
+    'driver' => 'database',
 
     'lifetime' => 10800,
     'expire_on_close' => true,
