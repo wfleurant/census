@@ -43,6 +43,7 @@ php:
   ports:
     - "9000:9000"
   environment:
+      CENSUS_DOCKER_APP: "TRUE"
       CENSUS_APIKEY: Example-U6ufn1MMMFWPqMqMnOnRnaZcJ41aaqIM
       GOOGLE_API_KEY: Example-6cB49Yh48_Example-fI8SuWZNE6AGX
   links:

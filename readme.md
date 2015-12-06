@@ -2,7 +2,7 @@
 
 ## Census & Map Application
 
-Made possible with Docker and Laravel and Opensource software. Please donate: https://my.fsf.org/donate/
+Application created with Docker, Laravel and The US Census Bureau. Open-Source software makes this possible. Please donate: https://my.fsf.org/donate/
 
 ### API Key
 
@@ -78,6 +78,64 @@ Migrated: 2014_10_12_100000_create_password_resets_table
 Migrated: 2015_12_06_064245_create_sessions_table
 ```
 
+### Assets 
+
+Code will be required for the container php to initialize its assents and environement. Surely this can be done outside of the environemnt, but we are not requiring the host operating system to install npm, gulp, bower, git, and etc.. Therefore, you'll want to run these commands to get your javascript up and running with your laravel framework. 
+
+```
+✔ ~/Development/dsni/dsni_census [master L|●4✚ 3…1] 
+04:00 $ docker exec -i -t dsnicensus_php_1 ../start.sh dependencies
+Running Dependencies Within Container Directory: /app
+[9.1MB/0.07s] Loading composer repositories with package information
+[9.5MB/0.08s] Installing dependencies (including require-dev) from lock file
+[11.1MB/0.11s] Nothing to install or update
+[9.8MB/0.11s] Generating autoload files
+[10.7MB/0.41s] > php artisan clear-compiled
+[10.7MB/0.53s] > php artisan optimize
+Generating optimized class loader
+[10.7MB/2.22s] Memory usage: 10.74MB (peak: 11.62MB), time: 2.22s
+[8.1MB/0.05s] Generating optimized autoload files
+[8.9MB/1.15s] Memory usage: 8.89MB (peak: 12.23MB), time: 1.15s
+[09:02:26] Using gulpfile /app/gulpfile.js
+[09:02:26] Starting 'default'...
+[09:02:26] Starting 'sass'...
+
+Fetching Sass Source Files...
+   - resources/assets/sass/app.scss
+
+
+Saving To...
+   - public/css/app.css
+
+[09:02:27] Finished 'default' after 360 ms
+[09:02:27] Finished 'sass' after 423 ms
+[09:02:27] Starting 'scripts'...
+
+Fetching Scripts Source Files...
+   - resources/assets/bower/jquery/dist/jquery.min.js
+   - resources/assets/bower/bootstrap/dist/js/bootstrap.min.js
+
+
+Saving To...
+   - public/js/vendor.js
+
+[09:02:27] Finished 'scripts' after 424 ms
+[09:02:27] Starting 'scriptsIn'...
+
+Fetching ScriptsIn Source Files...
+   - citysdk/js/**/*.js
+
+
+Saving To...
+   - public/js/all.js
+
+[09:02:27] Finished 'scriptsIn' after 44 ms
+
+Generating optimized class loader
+Nothing to migrate.
+....
+
+```
 
 ### Filesystem
 

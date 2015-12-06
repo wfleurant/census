@@ -1,0 +1,16 @@
+{
+  "name": "DSNI-Census",
+  "version": "0.0.1",
+  "description": "DSNI-Census",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "resources/assets/bower",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}
