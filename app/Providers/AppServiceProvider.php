@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Census\Providers;
 
 use Illuminate\Support\ServiceProvider;
 

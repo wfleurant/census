@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Census\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Census\Http\Requests;
+use Census\Http\Controllers\Controller;
 use Mapper;
 class HomeController extends Controller
 {

@@ -43,10 +43,10 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /* Application Service Providers... */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Census\Providers\AppServiceProvider::class,
+        Census\Providers\AuthServiceProvider::class,
+        Census\Providers\EventServiceProvider::class,
+        Census\Providers\RouteServiceProvider::class,
 
         /* Application Meta-Service Providers... */
         Cornford\Googlmapper\MapperServiceProvider::class,

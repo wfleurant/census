@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace Census\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
