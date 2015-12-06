@@ -14,6 +14,7 @@ Identify your API key by editing the file ```docker-compose.yml``` as shown:
 ```
 environment:
     CENSUS_APIKEY: Example-U6ufn1MMMFWPqMqMnOnRnaZcJ41aaqIM
+    GOOGLE_API_KEY: Example-AIzaSyC6c_Example-fI8SuWZNE6AGX
 ```
 
 
