@@ -1,3 +1,6 @@
 [submodule "citysdk"]
 	path = citysdk
 	url = https://github.com/uscensusbureau/citysdk.git
+[submodule "dsnidata"]
+	path = dsnidata
+	url = https://github.com/dsni/data.git

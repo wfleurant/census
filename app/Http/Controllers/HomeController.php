@@ -22,7 +22,11 @@ class HomeController extends Controller
             'marker' => true,
             'type' => 'ROADMAP',
         ]);
-        return $m->render();
+
+        $data['map'] = $m;
+        $data['id'] = 'census';
+        return view('map', $data);
+
     }
 
     /**
