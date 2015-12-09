@@ -3,38 +3,72 @@
 #### Variables
 
 ## composer: github key
-composer_key=Example-kT0uZ2GM3HC0c4Efzx8yWBUSRB2agMsQ
+composer_key=false
 
 #### Functions
 
 ## docker: install laravel dependencies
 function dependencies () {
-    cd .. && echo 'Running Dependencies Within Container Directory:' $PWD
-    git submodule init && git submodule update \
-                       || echo "Error: git submodule init"
-    echo "US Census Bureau / CitySDK:" $(git submodule status)
 
-    # composer config -g github-oauth.github.com ${composer_key}
-    composer install --profile
-    composer dump-autoload --optimize --profile
+    echo -e '\t- Installing Census Application Environment'
+    echo -e "\t- US Census Bureau / CitySDK:\t\t";
+    echo -e $(git submodule status) \
+        | awk '{print "\t\t-", $2, $3, "\n\t\t-", $5, $6 }'
 
-    npm install
+    echo -e '\t- Application Path:' $PWD
+    echo -e '\t- Recent 5 Changes to Source Code : '
+    TERM=xterm git log -5 --graph \
+        --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' \
+        --abbrev-commit --date=relative \
+            | sed -e 's/^*\ /\t    Commit: /1'
 
-    bower --allow-root install
+    [ $( git submodule init ) ] \
+        && echo -e '\n\t- Gid: Submodules Initialized'
 
-    export DISABLE_NOTIFIER=true
-    gulp
+    echo -e '\n\t- Git: Updating Submodules' \
+        && git submodule update
 
-    # grunt
+    if [ $composer_key != false ]; then
+        echo -e '\t- Composer: Installing GitHub Token' \
+            && composer config -g github-oauth.github.com ${composer_key}
+    fi
 
-    mkdir -p storage/logs
-    touch storage/logs/laravel.log
+    echo -e '\t- Composer: Installing & Profiling the Class Loader' \
+        && composer install --profile
 
-    php artisan optimize
+    echo -e '\t- Composer: Drumming Autoloader & Optimizing Application' \
+        && composer dump-autoload --optimize --profile
 
-    php artisan migrate --force --database=mysql-root
-    php artisan migrate:install --database=mysql-root
-    chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/
+    echo -e '\t- NodeJS Pkg Mgr: Installing Dependencies from package.json' \
+        && npm install
+
+    echo -e '\t- Bower: Installing Dependencies from bower.json' \
+        && bower --allow-root install
+
+    echo -e '\t- Gulp: Installing Dependencies from Gulpfile' \
+        && export DISABLE_NOTIFIER=true gulp
+
+    echo -e '\t- Environment: Storage, Logs...' \
+        && mkdir -p storage/logs \
+        && touch storage/logs/laravel.log
+
+    echo -e '\t- Artisan: Optimizing Application' \
+        && php artisan optimize
+
+    echo -e '\t- Artisan: Migrating Database' \
+        && php artisan migrate --force --database=mysql-root
+
+    echo -e '\t- Artisan: Installing Database Migrations' \
+        && php artisan migrate:install --database=mysql-root
+
+    # echo -e '\t- Artisan: Installing Database Session Table' \
+        # && (rm -rf database/migrations/2015*_create_sessions_table.php;
+            # php artisan session:table) # blocks until complete
+
+    echo -e '\t- Environment: Bootstrap/Cache, Storage, Vendor...' \
+        && chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/
+
+    echo -e '\t- Environment: Complete'
 }
 
 ## docker: change file modes: users, groups, others: +write, +read, +execute
@@ -46,12 +80,37 @@ function chmods () {
 #### Main
 
 
-if [ x"$CENSUS_DOCKER_APP" == x"TRUE" ]; then
 
-    if [ $1 ] && [ $1 == 'dependencies' ]; then
-        dependencies
-        exit
+if [ $1 ] && [ $1 == 'install' ]; then
+
+    if [ x"$CENSUS_DOCKER_APP" == x"TRUE" ]; then
+cat <<'EOF'
+
+    `7MM"""Yb.    .M"""bgd `7MN.   `7MF'`7MMF'
+      MM    `Yb. ,MI    "Y   MMN.    M    MM
+      MM     `Mb `MMb.       M YMb   M    MM
+      MM      MM   `YMMNq.   M  `MN. M    MM
+      MM     ,MP .     `MM   M   `MM.M    MM
+      MM    ,dP' Mb     dM   M     YMM    MM
+    .JMMmmmdP'   P"Ybmmd"  .JML.    YM  .JMML.
+
+EOF
+        if [ -f ../start.sh ]; then
+            cd .. && dependencies
+        else
+            echo -e '\t- Error: missing start.sh from ' $PWD && exit
+        fi
+
+    else
+
+        install='docker exec -i -t dsnicensus_php_1 ../start.sh install' \
+            && ${install}
+
+        # Init: /usr/local/sbin/php-fpm
+
     fi
+
+    exit
 
 else
 
