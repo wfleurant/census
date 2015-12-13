@@ -66,13 +66,16 @@ function dependencies () {
             # php artisan session:table) # blocks until complete
 
     echo -e '\t- Environment: Bootstrap/Cache, Storage, Vendor...' \
-        && chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/
+        && chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/ \
+        && mkdir -p /dev/shm/dsni_mysql
+        && chmod -R o+wrx public/
 
     echo -e '\t- Environment: Complete'
 }
 
 ## docker: change file modes: users, groups, others: +write, +read, +execute
 function chmods () {
+    sudo mkdir -p /dev/shm/dsni_mysql
     sudo chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/
 }
 
@@ -80,6 +83,11 @@ function chmods () {
 #### Main
 
 
+
+if [ $1 ] && [ $1 == 'gulp' ]; then
+    install='docker exec -i -t dsnicensus_php_1 gulp' \
+        && exec ${install}
+fi
 
 if [ $1 ] && [ $1 == 'install' ]; then
 

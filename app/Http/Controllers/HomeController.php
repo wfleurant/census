@@ -17,16 +17,28 @@ class HomeController extends Controller
     public function index()
     {
         $m = Mapper::map(42.322639, -71.072849, [
-            'zoom' => 17,
+            'zoom' => 6,
             'center' => true,
             'marker' => true,
             'type' => 'ROADMAP',
         ]);
-
+        $data['census_apikey'] = \Dotenv::findEnvironmentVariable('CENSUS_APIKEY');
         $data['map'] = $m;
         $data['id'] = 'census';
         return view('map', $data);
 
+    }
+
+    /* Resources from from dsnidata/census/tracts.json */
+    public function tracts() {
+        $file = '../dsnidata/census/tracts.json';
+        $c = collect(json_decode(file_get_contents($file)));
+
+        if ($c->isEmpty()) {
+            return \Response::json((object) []);
+        } else {
+            return \Response::json($c);
+        }
     }
 
     /**

@@ -1,8 +1,47 @@
 ## Dudley Street Neighborhood Initiative
+Dudley Village Campus, Dudley Square, Dudley Triangle, and Grove Hall  
 
 ## Census & Map Application
 
 Application created with Docker, Laravel and The US Census Bureau. Open-Source software makes this possible. Please donate: https://my.fsf.org/donate/
+
+For examples on how to add to the application please utilize the Query Builder here http://uscensusbureau.github.io/citysdk/guides/censusModule/queryBuilder.html
+
+GEORequest:
+```JSON
+{
+    "level": "us",
+    "zip": "02120",
+    "container": "tract",
+    "sublevel": true,
+    "variables": [
+        "age",
+        "employment_employed",
+        "employment_unemployed",
+        "income",
+        "median_contract_rent",
+        "population"
+    ]
+}
+```
+
+Output:
+
+```
+
+```
+
+## Census Geographies for DVC
+
+#### Tracts and Block Group Codes 
+
+The source for for tracts can be viewed here https://github.com/dsni/data/blob/master/census/tracts and are available within the Census application directory ```./dsnidata```
+
+#### Data 
+* Total Population 
+* Number of Housing Units
+* Median Income
+
 
 ### API Key
 
@@ -78,12 +117,12 @@ Migrated: 2014_10_12_100000_create_password_resets_table
 Migrated: 2015_12_06_064245_create_sessions_table
 ```
 
-### Assets 
+### Assets
 
-Code will be required for the container php to initialize its assents and environement. Surely this can be done outside of the environemnt, but we are not requiring the host operating system to install npm, gulp, bower, git, and etc.. Therefore, you'll want to run these commands to get your javascript up and running with your laravel framework. 
+Code will be required for the container php to initialize its assents and environement. Surely this can be done outside of the environemnt, but we are not requiring the host operating system to install npm, gulp, bower, git, and etc.. Therefore, you'll want to run these commands to get your javascript up and running with your laravel framework.
 
 ```
-✔ ~/Development/dsni/dsni_census [master L|●4✚ 3…1] 
+✔ ~/Development/dsni/dsni_census [master L|●4✚ 3…1]
 04:00 $ docker exec -i -t dsnicensus_php_1 ../start.sh dependencies
 Running Dependencies Within Container Directory: /app
 [9.1MB/0.07s] Loading composer repositories with package information

@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:5-fpm
 
 RUN curl -sL https://deb.nodesource.com/setup | bash - && \
     apt-get update && \
@@ -10,7 +10,7 @@ RUN curl -sL https://deb.nodesource.com/setup | bash - && \
 RUN docker-php-ext-install \
         mcrypt mbstring tokenizer \
         bz2 gd zip pdo_mysql \
-        mysql mysqli pcntl bcmath
+        mysqli pcntl bcmath
 
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
