@@ -1,51 +1,24 @@
 <html><head><title>Census</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+    <link href="{{ asset('/css/all.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css">
 
     <script src="{{ asset('/js/vendor.js') }}"></script>
     <script src="{{ asset('/js/citysdk.js') }}"></script>
     <script src="{{ asset('/js/citysdk.census.js') }}"></script>
 
-    <style>
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            display: table;
-            font-weight: 100;
-            font-family: 'Lato';
-        }
-
-        .content {
-            text-align: center;
-            display: inline-block;
-        }
-
-        .title {
-            font-size: 32px;
-        }
-
-    </style>
-
     <script>
 
         var apiKey, map;
-        var sdk = new CitySDK();
-        var census = sdk.modules.census;
-        var mode = "geometry";
 
-
-        var url_tracts = "{{ \URL::action('HomeController@tracts') }}";
+        var sdk         = new CitySDK();
+        var mode        = "geometry";
+        var census      = sdk.modules.census;
+        var url_tracts  = "{{ \URL::action('HomeController@tracts') }}";
         var dsni_tracts = tracts(url_tracts);
 
         function getApiKey() { return "{{{ $census_apikey }}}"; }
         apiKey = getApiKey();
-
-
 
         function clearMap() {
             map.data.forEach(function(feature) {
@@ -54,9 +27,10 @@
         }
 
         census.enable(apiKey);
+
         $(document).ready(function() {
 
-            var mapOptions = { center: { lat: 42.322639, lng: -71.072849 }, zoom: 7 };
+            var mapOptions = { center: { lat: 42.322639, lng: -71.072849 }, zoom: 9 };
 
             map = new google.maps.Map(document.getElementById('map-canvas-{!! $id !!}'), mapOptions);
             map.data.setStyle({ fillColor: 'green' });
@@ -101,25 +75,73 @@
         }
 
         function go(x) {
+            switch(x) {
 
-            /* State Outline */
-            var request  = { "state": "MA", "level": "state" };
-            var callback = function(response) { map.data.addGeoJson(response); };
-            census.GEORequest(request, callback);
-            return;
+                /* Unused / D.C. Triangle */
+                case 'unused_wip':
+                    var request = {
+                        variables: [
+                            "age",
+                            "population",
+                            "income"
+                        ],
+                        level: x,
+                        sublevel: true,
+                        container: mode,
+                        containerGeometry: census.GEOtoESRI(triangleGeojson)[0].geometry
+                    };
+                    break;
+
+                /* DVC Tract */
+                case 'dvc_tract':
+
+                    var acs_variables = [ "population" ];
+
+                    var tag_container = "tract";
+
+                    var request = {
+                        "level": "tract",
+                        "address": {
+                            "street": "504 Dudley St, ",
+                            "city": "Roxbury",
+                            "state": " MA "
+                        },
+                        "container": tag_container,
+                        "variables": [ acs_variables ]
+                    };
+
+                    break;
+
+                /* State Outline */
+                case 'mass_boundaries':
+                    var request  = { "state": "MA", "level": "state" };
+                    var callback = function(response) { map.data.addGeoJson(response); };
+                    census.GEORequest(request, callback);
+                    break;
+
+                default:
+                    return;
+            }
+
+            census.GEORequest(request, function (response) {
+
+                //Outputs the raw JSON text
+                jQuery("#rawOutput").append(JSON.stringify(response));
+
+                map.data.forEach(function (feature) {
+                    map.data.remove(feature);
+                });
+
+                map.data.addGeoJson(response);
+
+                map.setCenter({
+                    lat : Number(response.features[0].properties.INTPTLAT),
+                    lng : Number(response.features[0].properties.INTPTLON)
+                });
+
+            });
 
             /* other */
-            var request = {
-                variables: [
-                    "age",
-                    "population",
-                    "income"
-                ],
-                level: x,
-                sublevel: true,
-                container: mode,
-                containerGeometry: census.GEOtoESRI(triangleGeojson)[0].geometry
-            };
 
             census.GEORequest(request, function(response) {
                 clearMap();
@@ -135,46 +157,55 @@
     </script>
 
 </head>
+
 <body>
 
-    <div class="navbar">
-        <div class="title">DSNI Census</div>
-        <ul class="nav navbar-nav">
-            <li class="active">
-                <a href="#">Item 1</a>
-                <div class="container">
+<div class="page-header">
+    <center><h3>DSNI<small> Census</small></h3></center>
+</div>
 
-                    <input type="submit" value="Clear and Draw Triangle" onclick="showTriangle()"/>
-                    <input type="submit" value="Block Groups" onclick="go('blockGroup')"/>
-                    <input type="submit" value="Tracts" onclick="go('tract')"/>
+<div class="navbar" id="#navbar">
 
-                    <input type="submit" value="Get Places" onclick="go('place')"/>
-                    <input type="submit" value="Get Counties" onclick="go('county')"/>
-                    <input type="submit" value="Get States" onclick="go('state')"/>
+  <div class="btn-group-vertical">
 
-                    <input type="submit" name="mass_boundaries" value="Mass Boundaries" onclick="georequest(this.name)"/>
+    <button type="button" class="btn btn-primary"
+            onclick="go('dvc_tract')"> DVC Tract </button>
 
-                    {{--
-                    <input type="submit" value="Set container 'geometry'" onclick="setContainer('geometry')"/>
-                    <input type="submit" value="Set container 'geometry_within'" onclick="setContainer('geometry_within')"/>
-                    --}}
-                </div>
-            </li>
-            <li>
-                <a href="#">Item 2</a>
-                <div class="container">
-                    <input type="submit" value="Block2 Groups" onclick="go('blockGroup')"/>
-                    <input type="submit" value="Tracts2" onclick="go('tract')"/>
-                </div>
-            </li>
-        </ul>
-    </div> {{-- end of navbar --}}
+    <button type="button" class="btn btn-primary"
+            onclick="go('blockGroup')"> Block Groups </button>
 
-    <div id="map-canvas-{!! $id !!}"
-      style="height: 100%; width: 93%; display: table-cell; vertical-align: middle; margin: 0; padding: 0;">
+    <button type="button" class="btn btn-primary"
+            onclick="go('blockGroup')"> Blocks </button>
 
-        {!! $map->render(); !!}
+    <button type="button" class="btn btn-primary"
+            onclick="go('place')"> Churches </button>
 
-    </div>
+    <button type="button" class="btn btn-primary"
+            onclick="go('county')"> Businesses </button>
 
-</body></html>
+    <button type="button" class="btn btn-primary"
+            onclick="go('state')"> Non-Profits </button>
+
+    <button type="button" class="btn btn-primary"
+            onclick="georequest(this.name)"> Massachusetts </button>
+
+    <button type="button" class="btn btn-primary"
+            onclick="showTriangle()"> Clear Map </button>
+
+  </div>
+  <?php for ($br=0; $br <= 20 ; $br++) { echo '<br>'; } ?>
+</div>
+
+<?php
+$map_canvas_style="height: 100%; width: 93%; display: table-cell;"
+                 ." vertical-align: middle; margin: 0; padding: 0;";
+?>
+
+<div id="map-canvas-{!! $id !!}" style="<?=$map_canvas_style?>">
+
+  {!! $map->render(); !!}
+
+</div>
+
+</body>
+</html>

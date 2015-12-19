@@ -67,7 +67,7 @@ function dependencies () {
 
     echo -e '\t- Environment: Bootstrap/Cache, Storage, Vendor...' \
         && chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/ \
-        && mkdir -p /dev/shm/dsni_mysql
+        && mkdir -p /dev/shm/dsni_mysql \
         && chmod -R o+wrx public/
 
     echo -e '\t- Environment: Complete'
@@ -77,6 +77,7 @@ function dependencies () {
 function chmods () {
     sudo mkdir -p /dev/shm/dsni_mysql
     sudo chmod ugo+wrx -R bootstrap/cache/ storage/ vendor/
+    sudo chmod -R o+wrx public/
 }
 
 
@@ -85,8 +86,12 @@ function chmods () {
 
 
 if [ $1 ] && [ $1 == 'gulp' ]; then
-    install='docker exec -i -t dsnicensus_php_1 gulp' \
-        && exec ${install}
+    install='docker exec -i -t dsnicensus_php_1 gulp' && \
+        ${install} \
+            && echo 'Gulp: Complete' \
+            || echo 'Gulp: Error'
+        chmods
+        exec echo 'Gulp: Finished'
 fi
 
 if [ $1 ] && [ $1 == 'install' ]; then

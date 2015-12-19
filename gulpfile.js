@@ -2,11 +2,19 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
 
-    mix.sass('app.scss');
+    mix.sass([
+        '../../assets/sass/app.scss',
+    ]);
+
+    mix.styles([
+        '../../assets/bower/bootstrap/dist/css',
+        'mapstyle.css',
+    ], '/css');
 
     mix.scripts([
         '../../assets/bower/jquery/dist/jquery.min.js',
         '../../assets/bower/bootstrap/dist/js/bootstrap.min.js',
+        /* dsnicensus/js */
         'toolshed.js',
     ], 'public/js/vendor.js');
 

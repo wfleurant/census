@@ -1,0 +1,36 @@
+<style>
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: table;
+    font-weight: 100;
+}
+
+.content {
+    text-align: center;
+    display: inline-block;
+}
+
+.title {
+    font-size: 32px;
+}
+
+#container{
+    position: relative;
+}
+
+.nav {
+    background: #a8a599;
+    /*float: left; Instead of float, use absolute position*/
+    position: absolute;
+    width: 20%;
+    height: 100%;
+}
+
+
+</style>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Census\Http\Requests;
 use Census\Http\Controllers\Controller;
 use Mapper;
+
 class HomeController extends Controller
 {
     /**
