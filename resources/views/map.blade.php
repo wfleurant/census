@@ -98,6 +98,7 @@
                     var acs_variables = [ "population" ];
 
                     var tag_container = "tract";
+                    var level = "tract",
 
                     var request = {
                         "level": "tract",
