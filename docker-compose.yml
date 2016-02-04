@@ -34,11 +34,9 @@ php:
   volumes:
     - $PWD:/app
     - $PWD/images/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-    - $HOME/.ssh/id_ed25519:/root/.ssh/id_ed25519
-    - $HOME/.ssh/id_ed25519.pub:/root/.ssh/id_ed25519.pub
-    - $HOME/.composer/auth.json:/root/.composer/auth.json
-    - $HOME/.ssh/id_rsa:/root/.ssh/id_rsa
-    - $HOME/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
+    # - $HOME/.ssh/dsni-composer-keyaqui:/root/.ssh/dsni-composer-keyaqui
+    # - $HOME/.ssh/dsni-composer-keyaqui.pub:/root/.ssh/dsni-composer-keyaqui.pub
+    # - $HOME/.composer/auth.json:/root/.composer/auth.json
   working_dir: /app/public
   ports:
     - "9000:9000"

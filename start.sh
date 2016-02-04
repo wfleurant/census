@@ -127,17 +127,38 @@ EOF
 
 else
 
-    chmods
+    weekend_code="true"
 
-    ## docker: build to add any possible changes to config files in ./images/
-    build=true
+    # docker-compose should not be controlled
+    # by this bash script, on the docker-machine.
 
-    [ $build ] \
-        && docker-compose build \
-        || echo 'docker-compose build: skipped'
+    weekend_disc() {
+        z="$(basename $0)"
+        echo -e "\n Please remove the weekend_code variable "
+        echo " from $z because $z should probably"
+        echo " be executed (from container) like: ../$z"
+        echo " However leaving it true means you could be work-"
+        echo " ing on this app's docker environment. :D"
+    }
 
-    ## docker: ☘ start containers
-    docker-compose stop -t 45
-    docker-compose up -d
-    docker-compose logs
+    if [ ! ${weekend_code} ]; then
+        weekend_disc && exit 127
+    else
+        weekend_disc && sleep 10 && echo -e \
+            "\n\tWeekend Code $0 ($(date))"
+            exit
+        chmods
+
+        ## docker: build to add any possible changes to config files in ./images/
+        build=true
+
+        [ $build ] \
+            && docker-compose build \
+            || echo 'docker-compose build: skipped'
+
+        ## docker: ☘ start containers
+        docker-compose stop -t 45
+        docker-compose up -d
+        docker-compose logs
+    fi
 fi
